@@ -1,0 +1,74 @@
+{
+  "upstream": "https://github.com/Rantkid/DARLING-in-the-Windows",
+  "author": "Rantkid",
+  "commit": "99c458439aa2ba8ab374c2484c5bf0141950b109",
+  "tree": "94ff5ffcb8d4f326692310b963ce6e092aa42e1e",
+  "migrationDate": "2026-10-09",
+  "license": "PolyForm Noncommercial 1.0.0",
+  "requiredNotice": "Required Notice: Copyright (c) 2026 Rantkid.",
+  "files": [
+    {
+      "path": ".gitignore",
+      "gitBlobSha": "e051252a5766b710ed89a64d167bb836b398117d",
+      "size": 322,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "BootShell.cs",
+      "gitBlobSha": "0d57d27d9a1288866e57b4c933a480dc3fb30689",
+      "size": 4113,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "LICENSE",
+      "gitBlobSha": "5ecc88cfc4b1cff608ed640efe913c9dd97935c3",
+      "size": 4563,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "README.md",
+      "gitBlobSha": "6252ffee9b72d0f03f9d4fb7f9072c15e5c8cc48",
+      "size": 8667,
+      "mode": "100644",
+      "change": "Prepended Boot Studio attribution; original documentation retained"
+    },
+    {
+      "path": "Start-BootIntro.ps1",
+      "gitBlobSha": "f10a3e83d47c59a49a20e955972e9f21a42fc479",
+      "size": 28565,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "Start-BootIntroHidden.vbs",
+      "gitBlobSha": "d1ecfb0bb4622300c2bc7d00a2cd6ea96869caa6",
+      "size": 580,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "WallpaperBoot.ps1",
+      "gitBlobSha": "9076c779197ddf795d97749b38e7b4965b3aeab6",
+      "size": 28439,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "boot-intro.config.example.json",
+      "gitBlobSha": "1195be249770b6559bcdbb1b13d22e730a3fb008",
+      "size": 743,
+      "mode": "100644",
+      "change": "None"
+    },
+    {
+      "path": "media/README.md",
+      "gitBlobSha": "fb5ed81d119ad9e99016fcbc08761056871e94b7",
+      "size": 285,
+      "mode": "100644",
+      "change": "None"
+    }
+  ]
+}
