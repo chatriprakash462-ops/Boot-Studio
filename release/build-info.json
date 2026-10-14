@@ -1,0 +1,9 @@
+﻿{
+    "Version":  "0.2.5.3",
+    "Release":  "v0.25",
+    "InstallerSHA256":  "DCC1691AA4C948EDC30F40BDBA1CBEFF9B5F5D0113D5528D46D83C95A4CA2142",
+    "Product":  "Boot Studio",
+    "Signed":  false,
+    "Target":  "Windows 10/11 x64",
+    "BuiltAt":  "2026-10-14T05:17:23.2069188Z"
+}

@@ -1,8 +1,20 @@
 # Boot Studio
 
-Windows 个性化开机动画管理器，计划支持动画导入、预览、切换及启动管理。
+Windows 个性化开机动画管理器，支持本地视频导入、预览、切换及登录启动管理。
 
-当前阶段仅完成原始代码迁移与仓库初始化，尚未开发上述新管理功能。
+当前测试版为 **v0.25 / 0.2.5.3**，包含安装程序、桌面应用、登录动画入口、桌面恢复保护和完整卸载。播放顺序为“账号登录 → 动画 → 桌面”，不覆盖 Windows 登录界面，安装版不依赖 Wallpaper Engine。
+
+## 下载、安装与卸载
+
+普通用户下载 [BootStudio_Setup.exe](https://github.com/chatriprakash462-ops/Boot-Studio/raw/refs/heads/main/release/BootStudio_Setup.exe)，也可进入 [release 目录](release)选择安装包并点击 Download raw file。仓库为私有时需要有仓库访问权限。
+
+在要使用动画的 Windows 账号中运行安装程序，接受许可，保留启动入口选项。安装完成后打开 Boot Studio，导入有权使用的视频，默认自动设为下一次登录播放。应用复制视频到自己的目录，不修改源视频。
+
+卸载：先关闭应用，再通过 Windows 设置 → 应用 → 已安装的应用/应用和功能 → Boot Studio → 卸载。卸载先恢复并独立核验启动设置，再清理程序、配置、导入副本、日志及快捷方式；原视频不受影响。
+
+目标系统为 Windows 10/11 x64，需要 .NET Framework 4.8、Windows PowerShell 5.1 和系统媒体解码组件，无需安装开发环境。当前已在 Windows 11 虚拟机完成安装、导入/切换、预览、卸载及卸载后正常启动检查；用户也反馈 0.2.5.3 在干净快照和个人电脑测试成功。Windows 10 尚未实测。本版未签名，兼容性仍需更多电脑验证。
+
+完整说明见 [release/README.md](release/README.md)，校验见 [SHA256SUMS.txt](release/SHA256SUMS.txt)，测试范围见 [TEST-REPORT.md](release/TEST-REPORT.md)。源码使用与构建见 [app/README.md](app/README.md) 和 [installer/README.md](installer/README.md)。
 
 ## 来源、版权与许可
 
@@ -15,7 +27,11 @@ Windows 个性化开机动画管理器，计划支持动画导入、预览、切
 
 Required Notice: Copyright (c) 2026 Rantkid.
 
-本次迁移未执行任何部署或启动脚本，未修改 Windows Shell、注册表或启动配置。下方保留上游使用文档；其中部署命令会产生系统变更，并非本次迁移已执行的操作。
+## Boot Studio 安装测试版
+
+安装包开发代码与验证方式见 [installer/README.md](installer/README.md)。发行文件只包含程序、维护脚本和生成的测试图，不包含个人视频、本机配置或恢复备份。0.2.5.3 修复了从光盘导入只读视频导致卸载失败的问题。
+
+下方保留最初迁移时的上游文档，供源码机制参考；普通用户请使用上方安装包，不需要执行其中的手动配置命令。安装包开发和测试记录与原始迁移记录分别保存。
 
 迁移清单和静态阅读结果见 [MIGRATION.md](MIGRATION.md) 与 [UPSTREAM-MANIFEST.json](UPSTREAM-MANIFEST.json)。
 

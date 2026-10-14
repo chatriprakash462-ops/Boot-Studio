@@ -1,0 +1,14 @@
+﻿PASS: clean extraction; package hashes; no personal videos; no Wallpaper Engine dependency; PowerShell syntax
+PASS: real Windows account name and SID resolve to the same principal; different, empty and invalid identities rejected
+PASS: Winlogon/unknown desktop and hidden native surfaces block playback; active desktop permits Shell; manual mode still requires focus; native probe loads
+PASS: fresh enable; idempotent enable; restore absent user Shell and absent guard
+PASS: exact restoration of explicit explorer Shell
+PASS: existing custom user Shell; managed policy; custom machine Shell all preserved
+PASS: recovery task failure leaves original startup unchanged
+PASS: external Shell changes stop automatic restoration
+PASS: expired and cancelled requests cannot change Shell or recovery task
+PASS: lost/corrupt backup restores only our own Shell to the machine Explorer default; foreign Shell remains untouched
+PASS: read-only media accepted and removed; locked media rejected; complete directory cleanup; wrong root and junction blocked; external original media preserved
+PASS: timeout and existing Shell conflict have distinct, accurate messages.
+PASS: different-account installation rejected
+NOT TESTED: real registry/task mutation, logoff/reboot, multi-computer install/uninstall, digital signing

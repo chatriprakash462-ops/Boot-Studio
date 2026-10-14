@@ -1,0 +1,106 @@
+<Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Boot Studio" Width="1080" Height="720" MinWidth="940" MinHeight="640"
+        WindowStartupLocation="CenterScreen" Background="#0D1017" Foreground="#EDF0F8"
+        FontFamily="Microsoft YaHei UI, Segoe UI" FontSize="13">
+  <Window.Resources>
+    <SolidColorBrush x:Key="Muted" Color="#97A1B7"/>
+    <Style TargetType="Button">
+      <Setter Property="Foreground" Value="#EDF0F8"/><Setter Property="Background" Value="#222A3A"/>
+      <Setter Property="Padding" Value="16,10"/><Setter Property="BorderThickness" Value="0"/>
+      <Setter Property="Cursor" Value="Hand"/><Setter Property="HorizontalContentAlignment" Value="Center"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="Button">
+        <Border x:Name="Chrome" Background="{TemplateBinding Background}" CornerRadius="8" Padding="{TemplateBinding Padding}">
+          <ContentPresenter HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" VerticalAlignment="Center"/>
+        </Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Chrome" Property="Opacity" Value="0.82"/></Trigger>
+          <Trigger Property="IsEnabled" Value="False"><Setter TargetName="Chrome" Property="Opacity" Value="0.38"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+    <Style TargetType="ListBoxItem">
+      <Setter Property="Padding" Value="12,12"/><Setter Property="Margin" Value="0,0,0,5"/>
+      <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
+      <Setter Property="Template"><Setter.Value><ControlTemplate TargetType="ListBoxItem">
+        <Border x:Name="Item" CornerRadius="8" Background="Transparent" Padding="{TemplateBinding Padding}"><ContentPresenter/></Border>
+        <ControlTemplate.Triggers>
+          <Trigger Property="IsSelected" Value="True"><Setter TargetName="Item" Property="Background" Value="#28334B"/></Trigger>
+          <Trigger Property="IsMouseOver" Value="True"><Setter TargetName="Item" Property="BorderBrush" Value="#506282"/><Setter TargetName="Item" Property="BorderThickness" Value="1"/></Trigger>
+        </ControlTemplate.Triggers>
+      </ControlTemplate></Setter.Value></Setter>
+    </Style>
+  </Window.Resources>
+  <Grid Margin="26,24">
+    <Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+    <Grid Margin="0,0,0,24">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <StackPanel>
+        <StackPanel Orientation="Horizontal"><TextBlock Text="◈" FontSize="26" Foreground="#8CBAFF" Margin="0,0,10,0"/><TextBlock Text="Boot Studio" FontSize="26" FontWeight="SemiBold"/></StackPanel>
+        <TextBlock Text="让每一次开机，都从你喜欢的画面开始。" Foreground="{StaticResource Muted}" Margin="0,7,0,0"/>
+      </StackPanel>
+      <Border Grid.Column="1" Background="#182C26" CornerRadius="16" Padding="13,7" VerticalAlignment="Center">
+        <TextBlock x:Name="StartupStatus" Text="正在检查启动入口" Foreground="#89DFC2" FontSize="12"/>
+      </Border>
+    </Grid>
+    <Grid Grid.Row="1">
+      <Grid.ColumnDefinitions><ColumnDefinition Width="260"/><ColumnDefinition Width="22"/><ColumnDefinition Width="*"/></Grid.ColumnDefinitions>
+      <Border Background="#161C28" CornerRadius="14" Padding="16">
+        <Grid><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+          <StackPanel Margin="0,0,0,16">
+            <TextBlock Text="我的动画" FontSize="17" FontWeight="SemiBold"/>
+            <TextBlock x:Name="LibraryCount" Text="本地视频库" Foreground="{StaticResource Muted}" Margin="0,5,0,16" FontSize="12"/>
+            <Button x:Name="ImportButton" Content="＋  导入视频" Background="#7BAEFF" Foreground="#101A2C" FontWeight="SemiBold"/>
+            <CheckBox x:Name="AutoApply" Content="导入后自动设为开机动画" IsChecked="True" Foreground="#B6C3DD" Margin="1,12,0,0" FontSize="12"/>
+          </StackPanel>
+          <ListBox x:Name="LibraryList" Grid.Row="1" Background="Transparent" BorderThickness="0" Foreground="#EDF0F8" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+            <ListBox.ItemTemplate><DataTemplate><StackPanel>
+              <TextBlock Text="{Binding Name}" TextTrimming="CharacterEllipsis" FontWeight="SemiBold"/>
+              <TextBlock Text="{Binding Subtitle}" Foreground="#97A1B7" FontSize="11" Margin="0,5,0,0"/>
+            </StackPanel></DataTemplate></ListBox.ItemTemplate>
+          </ListBox>
+          <StackPanel Grid.Row="2" Margin="0,12,0,0">
+            <Button x:Name="UndoButton" Content="撤回上次切换" FontSize="12" Margin="0,0,0,8"/>
+            <Button x:Name="BackupButton" Content="打开可用状态备份" FontSize="12" Background="Transparent" Foreground="#97A1B7" Padding="4,8"/>
+          </StackPanel>
+        </Grid>
+      </Border>
+      <Grid Grid.Column="2"><Grid.RowDefinitions><RowDefinition Height="Auto"/><RowDefinition Height="*"/><RowDefinition Height="Auto"/><RowDefinition Height="Auto"/></Grid.RowDefinitions>
+        <StackPanel Margin="0,0,0,13">
+          <TextBlock x:Name="VideoTitle" Text="选择一段开机动画" FontSize="19" FontWeight="SemiBold" TextTrimming="CharacterEllipsis"/>
+          <TextBlock x:Name="VideoDetails" Text="MP4 / WMV · 本地保存" Foreground="{StaticResource Muted}" Margin="0,5,0,0"/>
+        </StackPanel>
+        <Border x:Name="DropZone" Grid.Row="1" Background="#080B10" BorderBrush="#2C3548" BorderThickness="1" CornerRadius="12" AllowDrop="True" ClipToBounds="True">
+          <Grid>
+            <MediaElement x:Name="Preview" LoadedBehavior="Manual" UnloadedBehavior="Manual" Stretch="Uniform"/>
+            <StackPanel x:Name="EmptyPreview" VerticalAlignment="Center" HorizontalAlignment="Center">
+              <TextBlock Text="▷" FontSize="48" Foreground="#7BAEFF" HorizontalAlignment="Center"/>
+              <TextBlock Text="把视频拖到这里" Margin="0,12,0,0" FontSize="16" HorizontalAlignment="Center"/>
+              <TextBlock Text="或从左侧导入 · 在这里预览效果" Foreground="#97A1B7" Margin="0,7,0,0"/>
+            </StackPanel>
+          </Grid>
+        </Border>
+        <Grid Grid.Row="2" Margin="0,14,0,14"><Grid.ColumnDefinitions><ColumnDefinition Width="Auto"/><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+          <Button x:Name="PlayButton" Content="▶  预览" Padding="17,9"/>
+          <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center" HorizontalAlignment="Center">
+            <TextBlock Text="动画音量" Foreground="{StaticResource Muted}" VerticalAlignment="Center" FontSize="12" Margin="0,0,10,0"/>
+            <Slider x:Name="Volume" Width="120" Minimum="0" Maximum="1" Value="0.1" VerticalAlignment="Center"/>
+            <TextBlock x:Name="VolumeLabel" Text="10%" Width="38" Margin="10,0,0,0" VerticalAlignment="Center" Foreground="#B6C3DD" FontSize="12"/>
+          </StackPanel>
+          <Button x:Name="ApplyButton" Grid.Column="2" Content="设为开机动画" Background="#7BAEFF" Foreground="#101A2C" FontWeight="SemiBold"/>
+        </Grid>
+        <Border Grid.Row="3" CornerRadius="10" Background="#161C28" Padding="16,13">
+          <StackPanel>
+            <TextBlock x:Name="CurrentAnimation" Text="当前动画：读取中" TextTrimming="CharacterEllipsis" FontWeight="SemiBold"/>
+            <TextBlock Text="登录界面 → 开机动画 → 桌面" Foreground="#8CBAFF" Margin="0,7,0,0" FontSize="12"/>
+            <TextBlock Text="切换将在下次登录生效，保留现有桌面恢复保护。" Foreground="{StaticResource Muted}" Margin="0,4,0,0" FontSize="11"/>
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Grid>
+    <Grid Grid.Row="2" Margin="0,18,0,0"><Grid.ColumnDefinitions><ColumnDefinition Width="*"/><ColumnDefinition Width="Auto"/></Grid.ColumnDefinitions>
+      <TextBlock x:Name="Message" Text="就绪。导入视频即可切换，也可以先关闭自动应用、预览后再设置。" TextWrapping="Wrap" Foreground="#97A1B7" FontSize="12" Margin="0,0,20,0"/>
+      <Button x:Name="AboutButton" Grid.Column="1" Content="关于 / 来源" Background="Transparent" Foreground="#97A1B7" Padding="0" FontSize="11"/>
+    </Grid>
+  </Grid>
+</Window>
