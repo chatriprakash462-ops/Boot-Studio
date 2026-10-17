@@ -20,7 +20,7 @@ namespace BootStudio
                     Directory.CreateDirectory(root);
                     File.WriteAllBytes(Path.Combine(root, "BootShell.exe"), new byte[] { 1 });
                     File.Copy(source, Path.Combine(root, "original.mp4"));
-                    string original = "{\"introVideo\":\"original.mp4\",\"volume\":0.1,\"maxDurationSeconds\":45,\"hideTaskbar\":true}";
+                    string original = "{\"introVideo\":\"original.mp4\",\"volume\":0.1,\"maxDurationSeconds\":120,\"hideTaskbar\":true}";
                     File.WriteAllText(Path.Combine(root, "boot-intro.config.json"), original, Encoding.UTF8);
                     var store = new BootProfileStore(root);
                     var entry = store.Import(source, metadata.Duration, metadata.Width, metadata.Height);

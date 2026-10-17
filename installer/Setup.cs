@@ -64,7 +64,7 @@ namespace BootStudioInstaller
                         var entry=zip.Entries.SingleOrDefault(e=>string.Equals(e.FullName.Replace('\\','/'),file.Path.Replace('\\','/'),StringComparison.Ordinal));
                         if(entry==null) throw new InvalidDataException("Package file is missing: "+file.Path);
                         size+=entry.Length;
-                        if(size>16*1024*1024) throw new InvalidDataException("Package exceeds its expected size.");
+                        if(size>128L*1024*1024) throw new InvalidDataException("Package exceeds its expected size.");
                         Directory.CreateDirectory(System.IO.Path.GetDirectoryName(destination));
                         using(var input=entry.Open()) using(var output=new FileStream(destination,FileMode.CreateNew)) input.CopyTo(output);
                         written.Add(destination);
@@ -97,7 +97,7 @@ namespace BootStudioInstaller
             string ps=System.IO.Path.Combine(Environment.SystemDirectory,@"WindowsPowerShell\v1.0\powershell.exe");
             using(var key=Registry.CurrentUser.CreateSubKey(@"Software\Microsoft\Windows\CurrentVersion\Uninstall\BootStudio"))
             {
-                key.SetValue("DisplayName","Boot Studio v0.25 (Test)"); key.SetValue("DisplayVersion","0.2.5.3");
+                key.SetValue("DisplayName","Boot Studio v0.25 (Test)"); key.SetValue("DisplayVersion","0.2.5.5");
                 key.SetValue("Publisher","Boot Studio contributors"); key.SetValue("InstallLocation",root);
                 key.SetValue("UninstallString","\""+System.IO.Path.Combine(root,"Uninstall.exe")+"\"");
                 key.SetValue("DisplayIcon",System.IO.Path.Combine(root,@"app\bin\BootStudio.exe"));
@@ -162,7 +162,7 @@ namespace BootStudioInstaller
             Text="Boot Studio v0.25 安装 · 测试版"; ClientSize=new Size(660,585); StartPosition=FormStartPosition.CenterScreen;
             FormBorderStyle=FormBorderStyle.FixedDialog; MaximizeBox=false; Font=new Font("Microsoft YaHei UI",10);
             Controls.Add(new Label { Text="Boot Studio", Font=new Font("Microsoft YaHei UI",23,FontStyle.Bold), Bounds=new Rectangle(25,18,600,45) });
-            Controls.Add(new Label { Text="安装到当前账号："+Installer.DefaultRoot+"\n效果：账号登录 → 动画 → 桌面。导入自己的视频后生效。\n不会设置自动登录或修改账号密码，附带生成的测试动画，不含第三方素材。", Bounds=new Rectangle(25,77,605,90) });
+            Controls.Add(new Label { Text="安装到当前账号："+Installer.DefaultRoot+"\n效果：账号登录 → 动画 → 桌面，也可导入自己的视频。\n附带《新宿决战·雨爱版》和备用测试图；不会设置自动登录或修改密码。", Bounds=new Rectangle(25,77,605,90) });
             var license=new TextBox { Multiline=true,ReadOnly=true,ScrollBars=ScrollBars.Vertical,Bounds=new Rectangle(25,170,610,180),Font=new Font("Consolas",8.5f) };
             using(var stream=Assembly.GetExecutingAssembly().GetManifestResourceStream("BootStudio.License")) using(var reader=new StreamReader(stream,Encoding.UTF8)) license.Text=reader.ReadToEnd().Replace("\r\n","\n").Replace("\n",Environment.NewLine);
             Controls.Add(license);

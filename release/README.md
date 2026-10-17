@@ -1,18 +1,18 @@
 ﻿# Boot Studio v0.25 测试发行版
 
-本次发行编号为 v0.25，程序内部版本 0.2.5.3（0.2.5-preview.3）。它是包含完整安装与卸载流程的新测试构建，不等同于早期 0.2.5-preview 二进制文件。
+本次发行编号为 v0.25，程序内部版本 0.2.5.5（0.2.5-preview.5）。它是包含完整安装与卸载流程的新测试构建，不等同于早期 0.2.5-preview 二进制文件。
 
 Boot Studio 可导入、预览和切换 Windows 登录后的全屏视频。顺序为：账号登录 → 动画 → 桌面。它不能覆盖联想标志、系统引导转圈或账号登录界面，也不会设置自动登录或更改密码。无需 Wallpaper Engine。
 
 ## 下载与系统要求
 
-普通用户只需下载 `BootStudio_Setup.exe`。这是包含所需程序、DLL、PowerShell 脚本、默认配置、许可证和生成的测试视频的安装包，不需要 Visual Studio、.NET SDK、Python 或 FFmpeg。
+普通用户只需下载 `BootStudio_Setup.exe`。这是包含所需程序、DLL、PowerShell 脚本、默认配置、许可证、默认动画《新宿决战·雨爱版》和生成的备用测试视频的安装包，不需要 Visual Studio、.NET SDK、Python 或 FFmpeg。
 
 - Windows 10/11 x64，建议 Windows 10 22H2 或 Windows 11。
 - .NET Framework 4.8 或更新的兼容版本；安装器会检查版本。Windows 11 已包含相应运行时，较旧 Windows 10 可能需要先安装微软运行时。
 - Windows PowerShell 5.1、WPF、任务计划程序及 Windows 视频解码组件可用。Windows N/KN 可能需要 Media Feature Pack。
 - 当前账号允许注册自己的交互登录任务；受组织策略限制的电脑可能无法启用。
-- 程序约数 MB；导入视频额外占用磁盘空间。单视频最多 1 GB、45 秒，支持 MP4/WMV/M4V/MOV 容器，实际取决于系统解码能力；建议 H.264 + AAC MP4。
+- 程序连同附带动画约数十 MB；导入视频额外占用磁盘空间。单视频最多 1 GB、120 秒（两分钟），支持 MP4/WMV/M4V/MOV 容器，实际取决于系统解码能力；建议 H.264 + AAC MP4。
 
 微软运行时说明：https://learn.microsoft.com/dotnet/framework/install/on-windows-and-server
 运行时下载：https://dotnet.microsoft.com/download/dotnet-framework/net48
@@ -23,7 +23,7 @@ Boot Studio 可导入、预览和切换 Windows 登录后的全屏视频。顺�
 2. 阅读并接受 PolyForm Noncommercial 1.0.0 使用许可。
 3. 默认启用登录动画入口，可选择创建桌面快捷方式。开始菜单快捷方式始终创建。
 4. 安装到当前账号 `%LOCALAPPDATA%\BootStudio`。安装前会保存原 Shell 设置；启用后用独立任务核验。
-5. 安装完成后打开应用。附带 6 秒生成测试图，可直接用于验证；导入你有权使用的视频即可替换。
+5. 安装完成后打开应用。默认使用附带的《新宿决战·雨爱版》（约 1 分 50 秒），视频库另有 6 秒生成测试图供备用；导入自己的视频即可替换。
 
 已有其他自定义 Shell 或受管理的 Shell 策略时，安装器不会覆盖。发现非空旧安装目录会停止，需先用原版卸载。旧预览版可能保留数据；只有确认恢复普通启动后，才可把旧数据目录备份移走再安装。
 
@@ -31,7 +31,7 @@ Boot Studio 可导入、预览和切换 Windows 登录后的全屏视频。顺�
 
 点击“导入视频”，选择本地文件。默认“导入后自动设为开机动画”；也可以取消自动应用，预览后点“设为开机动画”。应用复制视频到自己的目录，后续删除原文件不会影响已导入副本。
 
-下一次登录生效。Escape 或 Space 可跳过动画。音量保存在应用配置中。45 秒是本版导入限制；播放器另有 55 秒超时和登录后 60 秒桌面恢复保护。
+下一次登录生效。Escape 或 Space 可跳过动画。音量保存在应用配置中。120 秒（两分钟）是本版导入限制；播放时限另留 5 秒解码/淡出余量，启动器另有 180 秒硬超时和登录后 210 秒桌面恢复保护。
 
 关闭动画但保留软件：运行安装目录中的 `Disable-Animation.cmd`；重新启用使用 `Enable-Animation.cmd`。这些入口不要求保存密码。
 
@@ -64,4 +64,4 @@ Boot Studio 可导入、预览和切换 Windows 登录后的全屏视频。顺�
 
 Required Notice: Copyright (c) 2026 Rantkid.
 
-随包保留 LICENSE 和 NOTICE.txt，遵守 PolyForm Noncommercial 1.0.0。只用于许可允许的非商业用途。测试图由 FFmpeg testsrc2 生成，生成脚本随源码保存；不包含第三方动画、音乐、用户视频或账号凭据。所选视频的使用权由使用者自行确保。
+随包保留 LICENSE 和 NOTICE.txt，遵守 PolyForm Noncommercial 1.0.0。只用于许可允许的非商业用途。备用测试图由 FFmpeg testsrc2 生成。附带《新宿决战·雨爱版》及其音轨，提供者已确认有权随软件公开分发，来源和媒体权利说明见 MEDIA-NOTICE.txt。软件许可证不额外授予动画、画面或音乐的权利。包内不含用户账号凭据或本机配置。

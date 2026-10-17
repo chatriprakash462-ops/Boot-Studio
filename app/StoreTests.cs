@@ -44,9 +44,28 @@ namespace BootStudio
                 store.Undo();
                 Assert(File.ReadAllText(Path.Combine(root, "boot-intro.config.json"), Encoding.UTF8) == original, "Undo did not recover exact original configuration.");
                 rejected = false; try { store.Import(Path.Combine(root, "old.mp4"), 60, 1920, 1080); } catch (InvalidDataException) { rejected = true; }
-                Assert(rejected, "Overlong video was accepted.");
+                Assert(rejected, "Legacy lower duration cap was ignored.");
+                config = store.ReadConfig(); config["maxDurationSeconds"] = 120;
+                File.WriteAllText(Path.Combine(root, "boot-intro.config.json"), serializer.Serialize(config), Encoding.UTF8);
+                Assert(store.MaximumDuration() == 120, "Two-minute cap is not available.");
+                var longVideo = store.Import(Path.Combine(root, "old.mp4"), 120, 1920, 1080);
+                Assert(longVideo.Duration == 120, "Exactly two minutes was rejected.");
+                store.Apply(longVideo, 0.25);
+                string longApplied = File.ReadAllText(Path.Combine(root, "boot-intro.config.json"), Encoding.UTF8);
+                foreach (double invalid in new double[] { 120.001, 121, 180, double.NaN, double.PositiveInfinity, 0 })
+                {
+                    rejected = false; try { store.Import(Path.Combine(root, "old.mp4"), invalid, 1920, 1080); } catch (InvalidDataException) { rejected = true; }
+                    Assert(rejected, "Invalid/over-two-minute duration was accepted.");
+                    Assert(File.ReadAllText(Path.Combine(root, "boot-intro.config.json"), Encoding.UTF8) == longApplied, "Duration rejection changed active configuration.");
+                }
+                config.Remove("maxDurationSeconds");
+                File.WriteAllText(Path.Combine(root, "boot-intro.config.json"), serializer.Serialize(config), Encoding.UTF8);
+                Assert(store.MaximumDuration() == 120, "Missing duration limit did not default to two minutes.");
+                config["maxDurationSeconds"] = 600;
+                File.WriteAllText(Path.Combine(root, "boot-intro.config.json"), serializer.Serialize(config), Encoding.UTF8);
+                Assert(store.MaximumDuration() == 120, "Config could bypass the two-minute hard cap.");
                 Directory.CreateDirectory(Path.GetDirectoryName(Path.GetFullPath(resultsPath)));
-                File.WriteAllText(resultsPath, "PASS: managed import, source independence, config preservation, exact backup, integrity rejection, failure leaves config intact, exact undo, duration guard.\r\nTest runtime: " + root, Encoding.UTF8);
+                File.WriteAllText(resultsPath, "PASS: managed import, source independence, config preservation, exact backup, integrity rejection, failure leaves config intact, exact undo, legacy cap, exact 120-second acceptance, invalid/over-limit rejection, two-minute default/hard cap.\r\nTest runtime: " + root, Encoding.UTF8);
                 return 0;
             }
             catch (Exception e) { File.WriteAllText(resultsPath, "FAIL: " + e.ToString(), Encoding.UTF8); return 1; }

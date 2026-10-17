@@ -94,7 +94,7 @@ function Register-Guard {
     $psExe=Join-Path $env:WINDIR 'System32\WindowsPowerShell\v1.0\powershell.exe'
     $action=New-ScheduledTaskAction -Execute $psExe -Argument ('-NoProfile -ExecutionPolicy Bypass -WindowStyle Hidden -File "'+$scriptPath+'"')
     $trigger=New-ScheduledTaskTrigger -AtLogOn -User $script:context.Sid
-    $trigger.Delay='PT60S'
+    $trigger.Delay='PT210S'
     $principal=New-ScheduledTaskPrincipal -UserId $script:context.Sid -LogonType Interactive -RunLevel Limited
     $settings=New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -ExecutionTimeLimit (New-TimeSpan -Minutes 2)
     Register-ScheduledTask -TaskName $script:context.TaskName -Action $action -Trigger $trigger -Principal $principal -Settings $settings -Force | Out-Null

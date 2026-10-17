@@ -1,4 +1,5 @@
-﻿PASS: clean extraction; package hashes; no personal videos; no Wallpaper Engine dependency; PowerShell syntax
+﻿PASS: clean extraction; package hashes; only approved bundled video and generated backup; attribution and seeded library; no private user media/config; no Wallpaper Engine dependency; PowerShell syntax
+PASS: extracted 120-second cap, decoder/fade grace, compiled launcher deadline and independent recovery schedule leave sufficient playback headroom
 PASS: real Windows account name and SID resolve to the same principal; different, empty and invalid identities rejected
 PASS: Winlogon/unknown desktop and hidden native surfaces block playback; active desktop permits Shell; manual mode still requires focus; native probe loads
 PASS: fresh enable; idempotent enable; restore absent user Shell and absent guard

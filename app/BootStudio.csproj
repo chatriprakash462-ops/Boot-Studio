@@ -7,7 +7,7 @@
     <EnableDefaultPageItems>false</EnableDefaultPageItems>
     <AssemblyName>BootStudio</AssemblyName>
     <RootNamespace>BootStudio</RootNamespace>
-    <Version>0.2.5.3</Version>
+    <Version>0.2.5.5</Version>
     <LangVersion>5</LangVersion>
     <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>

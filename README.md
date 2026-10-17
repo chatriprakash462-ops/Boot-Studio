@@ -2,11 +2,13 @@
 
 Windows 个性化开机动画管理器，支持本地视频导入、预览、切换及登录启动管理。
 
-当前测试版为 **v0.25 / 0.2.5.3**，包含安装程序、桌面应用、登录动画入口、桌面恢复保护和完整卸载。播放顺序为“账号登录 → 动画 → 桌面”，不覆盖 Windows 登录界面，安装版不依赖 Wallpaper Engine。
+当前测试版为 **v0.25 / 0.2.5.5**，包含安装程序、桌面应用、登录动画入口、桌面恢复保护和完整卸载。播放顺序为“账号登录 → 动画 → 桌面”，不覆盖 Windows 登录界面，安装版不依赖 Wallpaper Engine。
 
 ## 下载、安装与卸载
 
-普通用户下载 [BootStudio_Setup.exe](https://github.com/chatriprakash462-ops/Boot-Studio/raw/refs/heads/main/release/BootStudio_Setup.exe)，也可进入 [release 目录](release)选择安装包并点击 Download raw file。仓库为私有时需要有仓库访问权限。
+安装后默认使用《新宿决战·雨爱版》，也可以在视频库中选择备用测试图或导入自己的视频。
+
+普通用户下载 [BootStudio_Setup.exe](https://github.com/chatriprakash462-ops/Boot-Studio/releases/download/v0.2.5.5/BootStudio_Setup.exe)，也可进入 [GitHub Releases](https://github.com/chatriprakash462-ops/Boot-Studio/releases/tag/v0.2.5.5) 的 Assets 下载安装包。发行说明和校验记录另见 [release 目录](release)。
 
 在要使用动画的 Windows 账号中运行安装程序，接受许可，保留启动入口选项。安装完成后打开 Boot Studio，导入有权使用的视频，默认自动设为下一次登录播放。应用复制视频到自己的目录，不修改源视频。
 
@@ -16,6 +18,8 @@ Windows 个性化开机动画管理器，支持本地视频导入、预览、切
 
 完整说明见 [release/README.md](release/README.md)，校验见 [SHA256SUMS.txt](release/SHA256SUMS.txt)，测试范围见 [TEST-REPORT.md](release/TEST-REPORT.md)。源码使用与构建见 [app/README.md](app/README.md) 和 [installer/README.md](installer/README.md)。
 
+0.2.5.4 将视频时长上限提高至 120 秒（两分钟），同步延长播放与桌面恢复保护期限。当前构建测试范围以发行目录报告为准，旧版实测结果仅供参考。
+
 ## 来源、版权与许可
 
 - 原始项目：[DARLING-in-the-Windows](https://github.com/Rantkid/DARLING-in-the-Windows)。
@@ -23,13 +27,13 @@ Windows 个性化开机动画管理器，支持本地视频导入、预览、切
 - 迁移版本：`99c458439aa2ba8ab374c2484c5bf0141950b109`（上游 main），迁移日期：2026-10-09。
 - 完整保留原始源码、配置模板、脚本、`LICENSE` 和作者版权声明；未导入上游 Git 提交历史。
 - 原始源码继续遵守 [PolyForm Noncommercial License 1.0.0](LICENSE)。非商业用途须遵守该许可证；商业用途须先取得原作者的单独授权，私有仓库不改变这些许可条件。
-- 本仓库不分发第三方动画或壁纸素材；请仅使用自有或已获授权的媒体。素材权利不包含在源码许可证内。
+- 安装包附带经提供者确认有权公开分发的《新宿决战·雨爱版》，来源和权利说明见 [媒体说明](installer/assets/MEDIA-NOTICE.txt)。素材权利不包含在源码许可证内。
 
 Required Notice: Copyright (c) 2026 Rantkid.
 
 ## Boot Studio 安装测试版
 
-安装包开发代码与验证方式见 [installer/README.md](installer/README.md)。发行文件只包含程序、维护脚本和生成的测试图，不包含个人视频、本机配置或恢复备份。0.2.5.3 修复了从光盘导入只读视频导致卸载失败的问题。
+安装包开发代码与验证方式见 [installer/README.md](installer/README.md)。发行文件包含程序、维护脚本、默认附带视频和生成的备用测试图，不包含私人视频库、本机配置或恢复备份。0.2.5.3 修复了从光盘导入只读视频导致卸载失败的问题。
 
 下方保留最初迁移时的上游文档，供源码机制参考；普通用户请使用上方安装包，不需要执行其中的手动配置命令。安装包开发和测试记录与原始迁移记录分别保存。
 

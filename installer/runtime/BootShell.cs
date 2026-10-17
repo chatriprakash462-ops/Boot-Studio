@@ -5,6 +5,7 @@ using System.IO;
 // Package-specific launcher. The confirmed local launcher is not overwritten.
 internal static class BootShell
 {
+    private const int PlayerDeadlineSeconds = 180;
     [STAThread]
     private static int Main()
     {
@@ -20,10 +21,10 @@ internal static class BootShell
             using (var child = Process.Start(start))
             {
                 if (child == null) throw new IOException("Cannot start animation player.");
-                if (!child.WaitForExit(55000))
+                if (!child.WaitForExit(PlayerDeadlineSeconds * 1000))
                 {
                     try { child.Kill(); child.WaitForExit(2000); } catch { }
-                    Log(root, "Player exceeded the 55-second safety deadline.");
+                    Log(root, "Player exceeded the 180-second safety deadline.");
                     return 2;
                 }
                 Log(root, "Player exited with code " + child.ExitCode + ".");

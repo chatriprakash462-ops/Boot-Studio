@@ -1,5 +1,5 @@
 ﻿#requires -version 5.1
-param([string]$Setup=(Join-Path $PSScriptRoot 'dist\BootStudio-Setup-0.2.5-preview.2.exe'))
+param([string]$Setup=(Join-Path $PSScriptRoot 'dist\BootStudio-Setup-0.2.5-preview.5.exe'))
 $ErrorActionPreference='Stop'
 $testRoot=Join-Path $PSScriptRoot ('test-results\'+[guid]::NewGuid().ToString('N'))
 New-Item -ItemType Directory -Path $testRoot -Force | Out-Null
@@ -11,7 +11,16 @@ foreach($entry in $manifest.Files){if((Get-FileHash -LiteralPath (Join-Path $roo
 $config=Get-Content -LiteralPath (Join-Path $root 'boot-intro.config.json') -Raw -Encoding UTF8 | ConvertFrom-Json
 if($config.wallpaperEngineExe -or $config.launchWallpaperEngineIfMissing -or $config.hideTaskbar -or $config.hideDesktopIcons){throw 'Unexpected machine-specific or desktop settings.'}
 $mediaFiles=@(Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {$_.Extension -in '.mp4','.wmv','.mov','.m4v'})
-if($mediaFiles.Count -ne 1 -or $mediaFiles[0].Name -ne 'sample.mp4' -or (Get-FileHash $mediaFiles[0].FullName).Hash -ne (Get-FileHash (Join-Path $PSScriptRoot 'assets\sample.mp4')).Hash){throw 'Unexpected media was packaged.'}
+$bundleInfo=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'assets\bundled-video.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+if($mediaFiles.Count -ne 2){throw 'Unexpected media count in package.'}
+foreach($name in @('sample.mp4','shinjuku-rain.mp4')){
+ $file=Join-Path $root ('media\'+$name)
+ if(-not(Test-Path -LiteralPath $file) -or (Get-FileHash -LiteralPath $file).Hash -ne (Get-FileHash -LiteralPath (Join-Path $PSScriptRoot ('assets\'+$name))).Hash){throw ('Bundled media mismatch: '+$name)}
+}
+if($config.introVideo -ne 'media\shinjuku-rain.mp4' -or $bundleInfo.DurationSeconds -gt $config.maxDurationSeconds){throw 'Bundled default does not fit playback duration.'}
+if(-not(Test-Path -LiteralPath (Join-Path $root 'MEDIA-NOTICE.txt'))){throw 'Bundled media attribution is missing.'}
+$seedLibrary=Get-Content -LiteralPath (Join-Path $root 'boot-studio-data\library.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+if($seedLibrary.Count -ne 2 -or @($seedLibrary | Where-Object {$_.Id -eq 'bundled-shinjuku' -and $_.Hash -eq $bundleInfo.SHA256}).Count -ne 1){throw 'Default/backup videos are not available in the library.'}
 if(-not(Test-Path (Join-Path $root 'Uninstall.exe'))){throw 'Standalone uninstaller missing.'}
 $errors=@()
 Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {$_.Extension -in '.ps1','.psm1'} | ForEach-Object {
@@ -20,6 +29,18 @@ Get-ChildItem -LiteralPath $root -Recurse -File | Where-Object {$_.Extension -in
     $errors+=@($parseErrors)
 }
 if($errors.Count){throw ($errors | Out-String)}
+if($config.maxDurationSeconds -ne 120){throw 'Fresh install does not permit exactly two minutes.'}
+$launcherAssembly=[Reflection.Assembly]::LoadFile((Join-Path $root 'BootShell.exe'))
+$deadline=[int]$launcherAssembly.GetType('BootShell').GetField('PlayerDeadlineSeconds',[Reflection.BindingFlags]'NonPublic,Static').GetRawConstantValue()
+$startupAst=[Management.Automation.Language.Parser]::ParseFile((Join-Path $root 'maintenance\Startup.Core.psm1'),[ref]$null,[ref]$null)
+$delayAssignment=$startupAst.FindAll({param($a) $a -is [Management.Automation.Language.AssignmentStatementAst] -and $a.Left.Extent.Text -eq '$trigger.Delay'},$true)
+if($delayAssignment.Count -ne 1){throw 'Recovery schedule is ambiguous.'}
+$delayLiteral=$delayAssignment[0].Right.Find({param($a) $a -is [Management.Automation.Language.StringConstantExpressionAst]},$true)
+if(-not $delayLiteral){throw 'Recovery delay is not a literal duration.'}
+$guardDelay=[Xml.XmlConvert]::ToTimeSpan($delayLiteral.Value).TotalSeconds
+if($deadline -lt ($config.maxDurationSeconds+35) -or $guardDelay -lt ($deadline+15)){throw 'Safety deadlines can interrupt an accepted two-minute video.'}
+$packagedPlayer=Get-Content -LiteralPath (Join-Path $root 'Start-BootIntro.ps1') -Raw -Encoding UTF8
+if(-not $packagedPlayer.Contains('[Math]::Min($maxDurationSeconds, 120) + 5')){throw 'Player is missing decoder/fade grace time.'}
 Import-Module (Join-Path $root 'maintenance\Startup.Core.psm1') -Force
 function New-State([bool]$Exists=$false,[string]$Value='',[bool]$FailGuard=$false){
     [pscustomobject]@{Shell=[pscustomobject]@{Exists=$Exists;Value=$Value;Kind='String'};Guard=[pscustomobject]@{Exists=$false;Xml=''};PolicyShell='';MachineShell='explorer.exe';FailGuard=$FailGuard}
@@ -29,7 +50,8 @@ function Read-State {Get-Content -LiteralPath (Join-Path $root 'simulation.json'
 function Assert([bool]$Condition,[string]$Message){if(-not $Condition){throw $Message}}
 function Must-Fail([scriptblock]$Operation,[string]$Message){$failed=$false;try{& $Operation|Out-Null}catch{$failed=$true};Assert $failed $Message}
 $passed=New-Object Collections.Generic.List[string]
-$passed.Add('PASS: clean extraction; package hashes; no personal videos; no Wallpaper Engine dependency; PowerShell syntax')
+$passed.Add('PASS: clean extraction; package hashes; only approved bundled video and generated backup; attribution and seeded library; no private user media/config; no Wallpaper Engine dependency; PowerShell syntax')
+$passed.Add('PASS: extracted 120-second cap, decoder/fade grace, compiled launcher deadline and independent recovery schedule leave sufficient playback headroom')
 $accountChecks=& (Get-Module Startup.Core) {
     $identity=[Security.Principal.WindowsIdentity]::GetCurrent()
     try{

@@ -57,8 +57,8 @@ namespace BootStudio
         public double MaximumDuration()
         {
             var config = ReadConfig();
-            double maximum = config.ContainsKey("maxDurationSeconds") ? Convert.ToDouble(config["maxDurationSeconds"]) : 45;
-            return maximum > 0 ? maximum : 45;
+            double maximum = config.ContainsKey("maxDurationSeconds") ? Convert.ToDouble(config["maxDurationSeconds"]) : 120;
+            return maximum > 0 && !double.IsInfinity(maximum) ? Math.Min(maximum, 120) : 120;
         }
         public List<VideoEntry> Library()
         {
@@ -74,7 +74,7 @@ namespace BootStudio
         {
             if (!File.Exists(source)) throw new FileNotFoundException("找不到选中的视频。", source);
             if (new FileInfo(source).Length > 1024L * 1024 * 1024) throw new InvalidDataException("视频超过 1 GB，请先压缩后导入。");
-            if (duration <= 0 || duration > MaximumDuration()) throw new InvalidDataException(string.Format("请使用时长在 {0:0} 秒以内的视频，以匹配当前开机播放时限。", MaximumDuration()));
+            if (double.IsNaN(duration) || double.IsInfinity(duration) || duration <= 0 || duration > MaximumDuration()) throw new InvalidDataException(string.Format("请使用时长在 {0:0} 秒以内的视频，以匹配当前开机播放时限。", MaximumDuration()));
             if (width <= 0 || height <= 0) throw new InvalidDataException("文件没有可播放的视频画面。");
             string ext = System.IO.Path.GetExtension(source).ToLowerInvariant();
             if (ext != ".mp4" && ext != ".wmv" && ext != ".m4v" && ext != ".mov") throw new InvalidDataException("请选择 MP4、WMV、M4V 或 MOV 视频。");

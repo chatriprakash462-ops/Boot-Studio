@@ -32,12 +32,13 @@ media/imports/
 installer/build/
 installer/dist/
 installer/test-results/
+installer/assets/shinjuku-rain.mp4
 # Only reviewed distribution files may be published.
 release/*
-!release/BootStudio_Setup.exe
 !release/README.md
 !release/LICENSE
 !release/SHA256SUMS.txt
 !release/build-info.json
 !release/ISOLATED-TESTS.txt
 !release/TEST-REPORT.md
+!release/MEDIA-NOTICE.txt

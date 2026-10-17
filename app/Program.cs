@@ -96,7 +96,7 @@ namespace BootStudio
             Find<Button>("BackupButton").Click += delegate { OpenBackup(); };
             Find<Button>("AboutButton").Click += delegate
             {
-                MessageBox.Show(window, "Boot Studio v0.25 (0.2.5.3)\n\n导入、预览、切换本机登录动画。\n启动机制基于 Rantkid / DARLING-in-the-Windows。\nhttps://github.com/Rantkid/DARLING-in-the-Windows\n\n遵守 PolyForm Noncommercial 1.0.0，仅用于获准的非商业用途。\n视频素材由你提供，应用不分发第三方动画。", "关于 Boot Studio", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show(window, "Boot Studio v0.25 (0.2.5.5)\n\n导入、预览、切换本机登录动画。\n启动机制基于 Rantkid / DARLING-in-the-Windows。\nhttps://github.com/Rantkid/DARLING-in-the-Windows\n\n遵守 PolyForm Noncommercial 1.0.0，仅用于获准的非商业用途。\n视频素材由你提供，应用不分发第三方动画。", "关于 Boot Studio", MessageBoxButton.OK, MessageBoxImage.Information);
             };
             preview.MediaOpened += delegate
             {

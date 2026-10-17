@@ -1,8 +1,10 @@
 # 安装包开发与验证
 
-## v0.25 当前发行流程（内部版本 0.2.5.3）
+## v0.25 当前发行流程（内部版本 0.2.5.5）
 
 以下历史测试记录只适用于对应旧构建。当前安装包的集成测试结论以 `release/TEST-REPORT.md` 及其中的 SHA-256 为准。
+
+附带媒体由 GitHub Release 单独提供，未放入 Git 历史。首次构建先执行 `installer/Download-BundledMedia.ps1` 下载并校验，来源说明见 `assets/MEDIA-NOTICE.txt`。
 
 在 Windows x64 的 Windows PowerShell 5.1 中运行：
 
@@ -16,9 +18,11 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File installer/Build-Release.
 
 发布前必须用最终安装包完成以下记录：干净虚拟机安装及配置、打开应用、预览、导入和切换视频、实际登录可见播放、正常回到桌面、从 Windows 应用列表卸载、确认文件和启动入口清理、再次登录正常进入桌面、卸载后重新安装。记录系统版本、安装包散列、实际屏幕观察和日志；媒体日志正常不能代替画面验证。Windows 10/11 应分别注明已测或未测。
 
-发布时保持经过验证的 EXE 不变，更新 TEST-REPORT.md，核对 SHA256SUMS.txt，再分发 release 目录。签名证书尚未配置，当前是未签名测试版；不可写成全部环境已验证。素材只使用生成测试图，不打包本机备份、个人视频、账号信息或未经授权的动画。GitHub 发布是单独步骤，构建脚本不会自动上传。
+发布时保持经过验证的 EXE 不变，更新 TEST-REPORT.md，核对 SHA256SUMS.txt，再分发 release 目录。签名证书尚未配置，当前是未签名测试版；不可写成全部环境已验证。当前附带经提供者确认授权的《新宿决战·雨爱版》及生成测试图，不打包本机备份、私人视频库或账号信息。GitHub 发布是单独步骤，构建脚本不会自动上传。
 
 2026-10-14：0.2.5.2 在真实虚拟机卸载时发现光盘视频副本带只读属性，ReadWrite 文件占用检查误报访问被拒绝，卸载在启动恢复和文件删除之前停止。0.2.5.3 改为只读独占打开检测文件占用，导入时仅清除管理副本的只读属性，源文件不变。新增只读导入、只读文件完整删除及真正文件锁拒绝检查，隔离测试通过；实际修复版测试结果见 TEST-REPORT.md。
+
+2026-10-17：0.2.5.4 将安装版导入上限提高到 120 秒，播放计时额外保留 5 秒解码/淡出余量。启动器总超时为 180 秒，独立恢复任务延迟为 210 秒；旧版 45/55/60 秒限制的测试结果不可直接沿用。
 
 ## 历史实现与验证记录
 
@@ -29,7 +33,7 @@ powershell.exe -NoProfile -ExecutionPolicy Bypass -File installer/Build-Release.
 ## 结构
 
 - `Setup.cs`：许可界面、运行环境检查、解包校验、开始菜单入口及卸载登记。
-- `runtime/BootShell.cs`：安装版入口；播放器最多等待 55 秒；按登录会话恢复 Explorer。
+- `runtime/BootShell.cs`：安装版入口；播放器最多等待 180 秒；按登录会话恢复 Explorer。
 - `runtime/Startup.Core.psm1`：当前用户 Shell 备份、恢复任务、启用和关闭事务。拒绝已有自定义 Shell 与受管理策略。
 - `runtime/Invoke-Startup.ps1`：通过当前用户交互任务执行；之后通过另一个任务核对登录环境。所有任务使用 Limited 权限，不需要保存账号密码。
 - `runtime/Restore-Desktop.ps1`：独立登录恢复保护。

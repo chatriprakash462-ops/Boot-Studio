@@ -1,0 +1,18 @@
+Boot Studio bundled video notice
+
+Title: 「新宿决战」雨爱版
+Source: https://www.bilibili.com/video/BV1QC3G6DEKX?p=2
+Uploader credited on the source: 望穿秋水145
+
+The file was supplied by the project maintainer as a watermark-removed edit.
+On 2026-10-17 the provider explicitly confirmed authorization for public
+distribution of the video, visuals and music together with Boot Studio.
+The distribution copy is encoded at 1920x1080 / 30 fps, with the original
+audio stream preserved; the provider's original file remains unchanged.
+
+Rights in the video, artwork and music remain with their respective holders.
+The software's PolyForm Noncommercial 1.0.0 license does not grant additional
+rights to these media assets. This notice records provenance and the supplied
+authorization; it does not claim that the media is public domain.
+
+sample.mp4 is a separate FFmpeg testsrc2-generated backup test pattern.

@@ -2,6 +2,10 @@
 param([switch]$Test)
 $ErrorActionPreference='Stop'
 $project=Split-Path -Parent $PSScriptRoot
+$bundleInfo=Get-Content -LiteralPath (Join-Path $PSScriptRoot 'assets\bundled-video.json') -Raw -Encoding UTF8 | ConvertFrom-Json
+$bundleSource=Join-Path $PSScriptRoot 'assets\shinjuku-rain.mp4'
+if(-not(Test-Path -LiteralPath $bundleSource)){throw 'Bundled video missing. Run installer/Download-BundledMedia.ps1 first.'}
+if((Get-FileHash -LiteralPath $bundleSource).Hash -ne $bundleInfo.SHA256){throw 'Bundled video checksum mismatch.'}
 $build=Join-Path $PSScriptRoot ('build\'+[guid]::NewGuid().ToString('N'))
 $payload=Join-Path $build 'payload'
 $output=Join-Path $PSScriptRoot 'dist'
@@ -30,8 +34,11 @@ if($LASTEXITCODE -ne 0){throw 'Uninstaller build failed.'}
 $media=Join-Path $payload 'media'
 New-Item -ItemType Directory -Path $media | Out-Null
 Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'assets\sample.mp4') -Destination $media
+Copy-Item -LiteralPath $bundleSource -Destination (Join-Path $media 'shinjuku-rain.mp4')
+Copy-Item -LiteralPath (Join-Path $PSScriptRoot 'assets\MEDIA-NOTICE.txt') -Destination $payload
 $config=Get-Content -LiteralPath (Join-Path $project 'boot-intro.config.example.json') -Raw -Encoding UTF8 | ConvertFrom-Json
-$config.introVideo='media\sample.mp4'
+$config.introVideo='media\shinjuku-rain.mp4'
+$config.maxDurationSeconds=120
 $config.wallpaperEngineExe=''
 $config.launchWallpaperEngineIfMissing=$false
 $config.waitForWallpaperEngineSeconds=0
@@ -40,13 +47,20 @@ $config.hideDesktopIcons=$false
 $config.hideTaskbar=$false
 $config.sendWallpaperEngineHideIcons=$false
 $config | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $payload 'boot-intro.config.json') -Encoding UTF8
+$seedData=Join-Path $payload 'boot-studio-data'
+New-Item -ItemType Directory -Path $seedData | Out-Null
+@(
+ [pscustomobject]@{Id='bundled-shinjuku';Name='新宿决战 · 雨爱版';Path='media\shinjuku-rain.mp4';Hash=$bundleInfo.SHA256;Duration=$bundleInfo.DurationSeconds;Width=1920;Height=1080},
+ [pscustomobject]@{Id='bundled-sample';Name='生成测试图（备用）';Path='media\sample.mp4';Hash=(Get-FileHash -LiteralPath (Join-Path $media 'sample.mp4')).Hash;Duration=6;Width=1280;Height=720}
+) | ConvertTo-Json -Depth 5 | Set-Content -LiteralPath (Join-Path $seedData 'library.json') -Encoding UTF8
 @'
-Boot Studio v0.25 / 0.2.5-preview.3
+Boot Studio v0.25 / 0.2.5-preview.5
 Original startup project: Rantkid / DARLING-in-the-Windows
 https://github.com/Rantkid/DARLING-in-the-Windows
 Required Notice: Copyright (c) 2026 Rantkid.
 License: PolyForm Noncommercial 1.0.0 (see LICENSE)
-No personal videos, account identifiers or credentials are included.
+No personal account identifiers, local configuration or credentials are included.
+media/shinjuku-rain.mp4 is a separately authorized third-party video; see MEDIA-NOTICE.txt.
 media/sample.mp4 is a generated test pattern, reproducible with Generate-Sample.ps1.
 The setup package has not yet been validated across other Windows installations.
 '@ | Set-Content -LiteralPath (Join-Path $payload 'NOTICE.txt') -Encoding UTF8
@@ -66,10 +80,10 @@ start "" "%~dp0app\bin\BootStudio.exe"
 $files=@(Get-ChildItem -LiteralPath $payload -File -Recurse | Sort-Object FullName | ForEach-Object {
     [pscustomobject]@{Path=$_.FullName.Substring($payload.Length+1).Replace('\','/');Hash=(Get-FileHash -LiteralPath $_.FullName -Algorithm SHA256).Hash}
 })
-[pscustomobject]@{Product='BootStudio.Install';Version='0.2.5-preview.3';OwnerSid='';Files=$files} | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $payload 'payload-manifest.json') -Encoding UTF8
+[pscustomobject]@{Product='BootStudio.Install';Version='0.2.5-preview.5';OwnerSid='';Files=$files} | ConvertTo-Json -Depth 8 | Set-Content -LiteralPath (Join-Path $payload 'payload-manifest.json') -Encoding UTF8
 $zip=Join-Path $build 'payload.zip'
 Compress-Archive -Path (Join-Path $payload '*') -DestinationPath $zip
-$exe=Join-Path $output 'BootStudio-Setup-0.2.5-preview.3.exe'
+$exe=Join-Path $output 'BootStudio-Setup-0.2.5-preview.5.exe'
 $references=@('System.dll','System.Core.dll','System.Drawing.dll','System.Windows.Forms.dll','System.Web.Extensions.dll','System.IO.Compression.dll','System.IO.Compression.FileSystem.dll','Microsoft.CSharp.dll')
 $arguments=@('/nologo','/target:winexe','/platform:x64','/optimize+','/codepage:65001',('/out:'+$exe),('/resource:'+$zip+',BootStudio.Payload.zip'),('/resource:'+(Join-Path $project 'LICENSE')+',BootStudio.License'),('/win32manifest:'+(Join-Path $PSScriptRoot 'Setup.manifest')))
 foreach($reference in $references){$arguments+=('/reference:'+(Join-Path $framework $reference))}

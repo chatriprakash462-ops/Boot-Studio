@@ -23,6 +23,8 @@ $script:lastSurfaceTrace = ''
     $Source=Replace-PlayerSection $Source '$script:isClosing = $true' "Write-PlayerTrace ('Closing overlay: '+`$Reason)`r`n        `$script:isClosing = `$true"
     $Source=Replace-PlayerSection $Source '$media.Add_MediaOpened({' "`$media.Add_MediaOpened({`r`n        Write-PlayerTrace 'Media opened.'"
     $Source=Replace-PlayerSection $Source '$script:mediaStarted = $true' "Write-PlayerTrace 'Playback started.'`r`n        `$script:mediaStarted = `$true"
+    # Keep the import cap at 120 seconds; reserve decoder startup and fade-out time.
+    $Source=Replace-PlayerSection $Source '$script:timeoutTimer.Interval = [TimeSpan]::FromSeconds($maxDurationSeconds)' '$script:timeoutTimer.Interval = [TimeSpan]::FromSeconds([Math]::Min($maxDurationSeconds, 120) + 5)'
     $Source=Replace-PlayerSection $Source '$window.Add_ContentRendered({' "`$window.Add_ContentRendered({`r`n        Write-PlayerTrace 'Overlay rendered.'"
     $surfaceCheck=@'
 $surface = [BootStudio.Player.DesktopProbe]::Read($windowHandle)
